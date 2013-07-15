@@ -15,7 +15,7 @@ var dir = me.join('/');
 var files = fs.readdirSync(dir);
 
 for (var i = 0, l = files.length, f; i < l; i++) {
-	if (i > 50) {
+	if (i > 55) {
 		break;
 	}
 	var f = files[i],
@@ -47,7 +47,9 @@ function work(f, jsf) {
 					body += s;
 				});
 			res.on('end', function() {
+					var prior = '';
 					if (exists) {
+						prior = body;
 						body = JSON.parse(body);
 						if (body.thumbprint == thumbprint) {
 							log(f, 'no local changes...');
@@ -70,6 +72,11 @@ function work(f, jsf) {
 					}
 					delete body.thumbnail_url;
 					delete body.product_id;
+					body = JSON.stringify(body);
+					if (body == prior) {
+						log(f, 'document is unchanged');
+						return; // no local change
+					}
 					http.request({
 							hostname: HOST,
 								auth: AUTH,
@@ -89,7 +96,7 @@ function work(f, jsf) {
 							function() {
 								log(f, 'error: ' + arguments);
 							})
-						.end(JSON.stringify(body));
+						.end(body);
 				});
 		});
 	req.on('error', function(){
