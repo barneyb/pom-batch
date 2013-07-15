@@ -1,0 +1,17 @@
+{
+  "author": "Barney Boisvert",
+  "name": "piecesofmilk-batch",
+  "description": "Batch processor for PiecesOfMilk's scraper",
+  "version": "0.0.1",
+  "homepage": "",
+  "__repository": {
+    "type": "svn",
+    "url": "https://sv33-www05d.armus.local/svn/OutcomesCX/hybrid-outcomes/trunk/jsclient"
+  },
+  "engines": {
+    "node": "~0.10.12"
+  },
+  "dependencies": {
+    "cheerio": "0.12.0"
+  }
+}

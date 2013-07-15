@@ -1,0 +1,5 @@
+{
+	"host": "your-couch-server",
+	"db": "/database-name/",
+	"auth": "username:password"
+}
