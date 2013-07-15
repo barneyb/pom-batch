@@ -15,9 +15,6 @@ var dir = me.join('/');
 var files = fs.readdirSync(dir);
 
 for (var i = 0, l = files.length, f; i < l; i++) {
-	if (i > 55) {
-		break;
-	}
 	var f = files[i],
 		jsf = f + '.oembed';
 	if (fs.existsSync(dir + '/' + jsf)) {
