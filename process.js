@@ -8,7 +8,8 @@ me[me.length - 1] = 'config.json';
 var config = JSON.parse(fs.readFileSync(me.join('/'))),
 	HOST = config.host,
 	DB = config.db,
-	AUTH = config.auth;
+	AUTH = config.auth,
+	PORT = config.port || 80;
 
 me.splice(me.length - 1, 1, 'blackmilkclothing.com', 'products');
 var dir = me.join('/');
@@ -34,6 +35,7 @@ function work(f, jsf) {
 	json = JSON.parse(json);
 	var req = http.request({
 			hostname: HOST,
+			port: PORT,
 			auth: AUTH,
 			path: DB + f
 		}, function(res) {
@@ -76,10 +78,11 @@ function work(f, jsf) {
 					}
 					http.request({
 							hostname: HOST,
-								auth: AUTH,
-								method: 'PUT', 
-								path: DB + f
-								},
+							port: PORT,
+							auth: AUTH,
+							method: 'PUT',
+							path: DB + f
+						},
 						function(res) {
 							res.on('data',
 								   function(s) {
@@ -91,13 +94,13 @@ function work(f, jsf) {
 						})
 						.on('error',
 							function() {
-								log(f, 'error: ' + arguments);
+								log(f, 'error: ' + JSON.stringify(arguments));
 							})
 						.end(body);
 				});
 		});
 	req.on('error', function(){
-			log(f, 'error: ' + arguments);
+			log(f, 'error: ' + JSON.stringify(arguments));
 		});
 	req.end();
 }
