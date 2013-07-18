@@ -29,9 +29,9 @@ function log(f, msg) {
 
 function work(f, jsf) {
 	var json = fs.readFileSync(dir + '/' + jsf);
-	var shasum = crypto.createHash('sha1');
-	shasum.update(json);
-	var thumbprint = shasum.digest('hex');
+	var chksum = crypto.createHash('sha1');
+	chksum.update(json);
+	var thumbprint = chksum.digest('hex');
 	json = JSON.parse(json);
 	var req = http.request({
 			hostname: HOST,
@@ -39,20 +39,20 @@ function work(f, jsf) {
 			auth: AUTH,
 			path: DB + f
 		}, function(res) {
-			log(f, 'starting');
 			var exists = res.statusCode == 200;
-			var body = '';
+			var docBody = '';
 			res.on('data', function(s) {
-					body += s;
+                docBody += s;
 				});
 			res.on('end', function() {
-					var prior = '';
+					var prior = '',
+                        body;
 					if (exists) {
-						prior = body;
-						body = JSON.parse(body);
+						prior = docBody;
+						body = JSON.parse(docBody);
 						if (body.thumbprint == thumbprint) {
 							log(f, 'no local changes...');
-							return; // no local change
+//							return; // no local change
 						}
 						body.brand = json.brand;
 					} else {
