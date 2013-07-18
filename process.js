@@ -3,19 +3,19 @@ var http = require('http'),
 	crypto = require('crypto'),
 	cheerio = require('cheerio');
 
-var me = process.argv[1].split('/');
-me[me.length - 1] = 'config.json';
-var config = JSON.parse(fs.readFileSync(me.join('/'))),
+var me = process.argv[1].split('/'),
+    root = me.slice(0, me.length - 1).join('/') + "/",
+    categories = fs.readFileSync(root + "categories.txt").toString().split("\n"),
+    config = JSON.parse(fs.readFileSync(root + "config.json")),
 	HOST = config.host,
 	DB = config.db,
 	AUTH = config.auth,
 	PORT = config.port || 80;
 
-me.splice(me.length - 1, 1, 'blackmilkclothing.com', 'products');
-var dir = me.join('/');
+var dir = root + "blackmilkclothing.com/products";
 var files = fs.readdirSync(dir);
 
-for (var i = 0, l = files.length, f; i < l; i++) {
+for (var i = 0, l = files.length; i < 30; i++) {
 	var f = files[i],
 		jsf = f + '.oembed';
 	if (fs.existsSync(dir + '/' + jsf)) {
@@ -58,6 +58,19 @@ function work(f, jsf) {
 					} else {
 						body = json;
 					}
+                    var cats = categories.filter(function(it) {
+                            return it.indexOf(f + ":") == 0;
+                        }).map(function(it) {
+                            return it.split(":")[1];
+                        });
+                    if (! body.categories) {
+                        body.categories = [];
+                    }
+                    cats.forEach(function(cat) {
+                        if (body.categories.indexOf(cat) < 0) {
+                            body.categories.push(cat);
+                        }
+                    });
 					body.thumbprint = thumbprint;
 					var $ = cheerio.load(fs.readFileSync(dir + '/' + f));
 					body.hashtag = $('span.tag').first().text();
