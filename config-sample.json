@@ -1,5 +1,6 @@
 {
 	"host": "your-couch-server",
+	"port": 80,
 	"db": "/database-name/",
 	"auth": "username:password"
 }
