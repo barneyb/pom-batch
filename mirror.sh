@@ -20,8 +20,9 @@ wget \
 	--wait=0.25s \
 	--random-wait \
 	--reject .js,.css \
-	"http://blackmilkclothing.com/collections?theme=main" \
-	"http://blackmilkclothing.com/collections/all"
+	"http://blackmilkclothing.com/collections?theme=main"
+
+#	"http://blackmilkclothing.com/collections/all"
 
 #	--user-agent="$USER_AGENT" \
 
