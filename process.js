@@ -46,46 +46,47 @@ function work(f, jsf) {
 				});
 			res.on('end', function() {
 					var prior = '',
-                        body;
+                        doc;
 					if (exists) {
 						prior = docBody;
-						body = JSON.parse(docBody);
-						if (body.thumbprint == thumbprint) {
-							log(f, 'no local changes...');
+						doc = JSON.parse(docBody);
+//						if (doc.thumbprint == thumbprint) {
+//							log(f, 'no local changes...');
 //							return; // no local change
-						}
-						body.brand = json.brand;
+//						}
+						doc.brand = json.brand;
 					} else {
-						body = json;
+						doc = json;
 					}
                     var cats = categories.filter(function(it) {
                             return it.indexOf(f + ":") == 0;
                         }).map(function(it) {
                             return it.split(":")[1];
                         });
-                    if (! body.categories) {
-                        body.categories = [];
+                    cats.push(doc.brand.indexOf("Black Milk ") == 0 ? doc.brand.substr(11) : doc.brand);
+                    if (! doc.categories) {
+                        doc.categories = [];
                     }
                     cats.forEach(function(cat) {
-                        if (body.categories.indexOf(cat) < 0) {
-                            body.categories.push(cat);
+                        if (doc.categories.indexOf(cat) < 0) {
+                            doc.categories.push(cat);
                         }
                     });
-					body.thumbprint = thumbprint;
+					doc.thumbprint = thumbprint;
 					var $ = cheerio.load(fs.readFileSync(dir + '/' + f));
-					body.hashtag = $('span.tag').first().text();
+					doc.hashtag = $('span.tag').first().text();
 					if (json.thumbnail_url) {
 						var parts = json.thumbnail_url.split('?');
 						parts = parts[0].split('.');
-						body.image = {
+						doc.image = {
 							root: parts.slice(0, parts.length - 1).join('.'),
 							ext: parts[parts.length - 1]
 						};
 					}
-					delete body.thumbnail_url;
-					delete body.product_id;
-					body = JSON.stringify(body);
-					if (body == prior) {
+					delete doc.thumbnail_url;
+					delete doc.product_id;
+					doc = JSON.stringify(doc);
+					if (doc == prior) {
 						log(f, 'document is unchanged');
 						return; // no local change
 					}
@@ -109,7 +110,7 @@ function work(f, jsf) {
 							function() {
 								log(f, 'error: ' + JSON.stringify(arguments));
 							})
-						.end(body);
+						.end(doc);
 				});
 		});
 	req.on('error', function(){
