@@ -15,7 +15,7 @@ var me = process.argv[1].split('/'),
 var dir = root + "blackmilkclothing.com/products";
 var files = fs.readdirSync(dir);
 
-for (var i = 0, l = files.length; i < 30; i++) {
+for (var i = 0, l = files.length; i < l; i++) {
 	var f = files[i],
 		jsf = f + '.oembed';
 	if (fs.existsSync(dir + '/' + jsf)) {
