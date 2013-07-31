@@ -22,7 +22,7 @@ wget \
 	--exclude-domains=blog.blackmilkclothing.com \
 	--wait=1s \
 	--random-wait \
-	--reject ".js,.css,\?theme=mobile" \
+	--reject ".js,.css,.atom,\?theme=mobile" \
 	"http://blackmilkclothing.com/collections" \
 	"http://blackmilkclothing.com/collections/all"
 
