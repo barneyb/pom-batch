@@ -28,9 +28,3 @@ wget \
 
 # show the log as it's going
 tail -f $LOG
-
-echo
-echo "'wget' hasn't been stopped, you've just stopped watching its log:"
-echo
-ps auwx | grep wget | grep mirror
-echo
