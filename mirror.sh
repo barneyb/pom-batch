@@ -10,7 +10,8 @@ USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (K
 cd `dirname $0`
 
 # record the script that was used to trigger
-cat $0 > $LOG
+echo "# `date`" > $LOG
+cat $0 >> $LOG
 
 # start it (in the background)
 wget \
@@ -18,11 +19,13 @@ wget \
 	--background \
 	--no-cookies \
 	--header "Cookie: theme=main" \
-	--mirror \
-	--exclude-domains=blog.blackmilkclothing.com \
-	--wait=1s \
+	--recursive \
+	--level "inf" \
+	--exclude-domains="blog.blackmilkclothing.com" \
+	--exclude-directories "account,pages" \
+	--wait="1s" \
 	--random-wait \
-	--reject ".js,.css,.atom,\?theme=mobile" \
+	--reject ".js,.css,.atom" \
 	"http://blackmilkclothing.com/collections" \
 	"http://blackmilkclothing.com/collections/all"
 
