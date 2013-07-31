@@ -5,7 +5,7 @@ var http = require('http'),
 
 var me = process.argv[1].split('/'),
     root = me.slice(0, me.length - 1).join('/') + "/",
-    categories = fs.readFileSync(root + "categories.txt").toString().split("\n"),
+    categories = fs.readFileSync(root + "blackmilkclothing.com/categories.txt").toString().split("\n"),
     config = JSON.parse(fs.readFileSync(root + "config.json")),
 	HOST = config.host,
 	DB = config.db,

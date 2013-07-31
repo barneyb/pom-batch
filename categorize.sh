@@ -8,4 +8,4 @@ for p in `ls blackmilkclothing.com/products/*.oembed | cut -d / -f 3 | cut -d . 
     for c in `find blackmilkclothing.com/collections -name $p | cut -d / -f 3`; do
         echo "$p:$c"
     done
-done > categories.txt
+done > blackmilkclothing.com/categories.txt
