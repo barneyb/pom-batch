@@ -6,22 +6,20 @@ COOKIES=./cookies.txt
 LOG=./log/mirror.`date "+%F_%T"`.log
 USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.116 Safari/537.36"
 
+# --user-agent="$USER_AGENT" \
+
 cd `dirname $0`
+
+# record the script that was used to trigger
+cat $0 > $LOG
 
 # make one request to ensure it's the right theme
 wget \
 	--load-cookies $COOKIES \
 	--save-cookies $COOKIES \
-	--user-agent="$USER_AGENT" \
 	"http://blackmilkclothing.com/collections?theme=main"
 
 rm collections # this was just fetched, but we don't care
-
-cat $COOKIES
-exit
-
-# record the script that was used to trigger
-cat $0 > $LOG
 
 # start it (in the background)
 wget \
@@ -33,7 +31,6 @@ wget \
 	--wait=1s \
 	--random-wait \
 	--reject .js,.css \
-	--user-agent="$USER_AGENT" \
 	"http://blackmilkclothing.com/collections" \
 	"http://blackmilkclothing.com/collections/all"
 
@@ -41,7 +38,7 @@ wget \
 tail -f $LOG
 
 echo
-echo "'wget' hasn't been stopped, you've just stopped watching it:"
+echo "'wget' hasn't been stopped, you've just stopped watching its log:"
 echo
 ps auwx | grep wget | grep mirror
 echo
