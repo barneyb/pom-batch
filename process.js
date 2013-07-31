@@ -46,7 +46,8 @@ function work(f, jsf) {
 				});
 			res.on('end', function() {
                 var prior = '',
-                    doc;
+                    doc,
+                    now = new Date();
                 if (exists) {
                     prior = docBody;
                     doc = JSON.parse(docBody);
@@ -55,14 +56,14 @@ function work(f, jsf) {
 //                        return; // no local change
 //                    }
                     doc.brand = json.brand;
+                    if (doc.createdAt == null) {
+                        doc.createdAt = "2013-07-18T18:42:00.000Z";
+                    }
                 } else {
                     doc = json;
-                    doc.createdAt = new Date();
+                    doc.createdAt = now;
                 }
-                if (doc.createdAt == null) {
-                    doc.createdAt = "2013-07-18T18:42:00.000Z";
-                }
-                doc.updatedAt = new Date();
+                doc.updatedAt = now;
 
                 // cats from the list
                 var cats = categories.filter(function(it) {
@@ -91,12 +92,15 @@ function work(f, jsf) {
                     doc.categories = [];
                 }
                 cats.map(function(cat) {
-                    return cat.toLowerCase()
+                    return cat.toString()
+                        .toLowerCase()
                         .replace(/([0-9])-([0-9])/g, "$1_$2")
                         .replace(/-/g, " ")
-                        .replace(/_/g, "-");
+                        .replace(/_/g, "-")
+                        .replace(/^ +/, "")
+                        .replace(/ +$/, "");
                 }).forEach(function(cat) {
-                    if (cat != "black milk" && doc.categories.indexOf(cat) < 0) {
+                    if (cat.length > 0 && cat != "black milk" && doc.categories.indexOf(cat) < 0) {
                         doc.categories.push(cat);
                     }
                 });
