@@ -4,4 +4,4 @@
 
 cd `dirname $0`
 
-rsync -a --progress --verbose --stats barneyb@barneyb.com:~/blackmilkclothing.com/blackmilkclothing.com/ ./blackmilkclothing.com/
+rsync -a --progress --verbose --stats --delete-after barneyb@barneyb.com:~/blackmilkclothing.com/blackmilkclothing.com/ ./blackmilkclothing.com/
