@@ -57,12 +57,12 @@ function work(f, jsf) {
                     doc.brand = json.brand;
                 } else {
                     doc = json;
-                    doc.createdAt = new Date().valueOf();
+                    doc.createdAt = new Date();
                 }
                 if (doc.createdAt == null) {
-                    doc.createdAt = Date.parse("2013-07-18T11:42:00-0700");
+                    doc.createdAt = "2013-07-18T18:42:00.000Z";
                 }
-                doc.updatedAt = new Date().valueOf();
+                doc.updatedAt = new Date();
 
                 // cats from the list
                 var cats = categories.filter(function(it) {
