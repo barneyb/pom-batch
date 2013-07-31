@@ -8,22 +8,40 @@ USER_AGENT="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (K
 
 cd `dirname $0`
 
-touch $LOG
+# make one request to ensure it's the right theme
+wget \
+	--load-cookies $COOKIES \
+	--save-cookies $COOKIES \
+	--user-agent="$USER_AGENT" \
+	"http://blackmilkclothing.com/collections?theme=main"
 
+rm collections # this was just fetched, but we don't care
+
+cat $COOKIES
+exit
+
+# record the script that was used to trigger
+cat $0 > $LOG
+
+# start it (in the background)
 wget \
 	--append-output=$LOG \
 	--background \
 	--load-cookies $COOKIES \
-	--save-cookies $COOKIES \
 	--mirror \
 	--exclude-domains=blog.blackmilkclothing.com \
-	--wait=0.25s \
+	--wait=1s \
 	--random-wait \
 	--reject .js,.css \
-	"http://blackmilkclothing.com/collections?theme=main"
+	--user-agent="$USER_AGENT" \
+	"http://blackmilkclothing.com/collections" \
+	"http://blackmilkclothing.com/collections/all"
 
-#	"http://blackmilkclothing.com/collections/all"
-
-#	--user-agent="$USER_AGENT" \
-
+# show the log as it's going
 tail -f $LOG
+
+echo
+echo "'wget' hasn't been stopped, you've just stopped watching it:"
+echo
+ps auwx | grep wget | grep mirror
+echo
