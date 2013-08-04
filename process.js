@@ -3,6 +3,8 @@ var http = require('http'),
 	crypto = require('crypto'),
 	cheerio = require('cheerio');
 
+var CURRENT_VERSION = 1;
+
 var me = process.argv[1].split('/'),
     root = me.slice(0, me.length - 1).join('/') + "/",
     categories = fs.readFileSync(root + "blackmilkclothing.com/categories.txt").toString().split("\n"),
@@ -56,8 +58,8 @@ function work(f, jsf) {
 //                        return; // no local change
 //                    }
                     doc.brand = json.brand;
-                    if (doc.createdAt == null) {
-                        doc.createdAt = "2013-07-18T18:42:00.000Z";
+                    if (doc._version == null) {
+                        doc._version = 1;
                     }
                 } else {
                     doc = json;
@@ -84,7 +86,8 @@ function work(f, jsf) {
                 cats.push(bc);
 
                 // cats from the title
-                if (doc.title.indexOf("LIMITED") >= 0) {
+                if (doc.title.toUpperCase().indexOf("LIMITED") >= 0) {
+                    doc.title = doc.title.replace(/\s*(-\s*)?LIMITED\s*(-\s*)?/gi, " ").trim();
                     cats.push("limited");
                 }
 
@@ -117,11 +120,8 @@ function work(f, jsf) {
                 }
                 delete doc.thumbnail_url;
                 delete doc.product_id;
+                doc._version = CURRENT_VERSION
                 doc = JSON.stringify(doc);
-                if (doc == prior) {
-                    log(f, 'document is unchanged');
-                    return; // no local change
-                }
                 http.request({
                         hostname: HOST,
                         port: PORT,
