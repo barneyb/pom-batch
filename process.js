@@ -58,8 +58,8 @@ function work(f, jsf) {
 //                        return; // no local change
 //                    }
                     doc.brand = json.brand;
-                    if (doc._version == null) {
-                        doc._version = 1;
+                    if (doc.format_version == null) {
+                        doc.format_version = 1;
                     }
                 } else {
                     doc = json;
@@ -86,10 +86,12 @@ function work(f, jsf) {
                 cats.push(bc);
 
                 // cats from the title
-                if (doc.title.toUpperCase().indexOf("LIMITED") >= 0) {
-                    doc.title = doc.title.replace(/\s*(-\s*)?LIMITED\s*(-\s*)?/gi, " ").trim();
-                    cats.push("limited");
-                }
+                ["limited", "made to order"].forEach(function(cat) {
+                    if (doc.title.toUpperCase().indexOf(cat.toUpperCase()) >= 0) {
+                        doc.title = doc.title.replace(new RegExp("(-|\\(|\\s)*" + cat + "(-|\\)|\\s)*", "gi"), " ").trim();
+                        cats.push(cat);
+                    }
+                });
 
                 if (! doc.categories) {
                     doc.categories = [];
@@ -120,7 +122,7 @@ function work(f, jsf) {
                 }
                 delete doc.thumbnail_url;
                 delete doc.product_id;
-                doc._version = CURRENT_VERSION
+                doc.format_version = CURRENT_VERSION
                 doc = JSON.stringify(doc);
                 http.request({
                         hostname: HOST,
